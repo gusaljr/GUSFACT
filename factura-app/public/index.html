@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Factura</title>
+    <script>
+        async function previewInvoice() {
+            const clientName = document.getElementById('clientName').value;
+            const total = document.getElementById('total').value;
+
+            const response = await fetch('/preview-invoice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clientName, total })
+            });
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const iframe = document.getElementById('preview');
+            iframe.src = url; // Establecer la fuente del iframe al PDF generado
+        }
+    </script>
+</head>
+<body>
+    <h1>Generar Factura</h1>
+    <label for="clientName">Nombre del Cliente:</label>
+    <input type="text" id="clientName" required>
+    <br>
+    <label for="total">Total:</label>
+    <input type="text" id="total" required>
+    <br>
+    <button onclick="previewInvoice()">Ver Vista Previa</button>
+    
+    <h2>Vista Previa:</h2>
+    <iframe id="preview" width="600" height="400"></iframe>
+</body>
+</html>
